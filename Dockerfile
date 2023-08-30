@@ -1,22 +1,40 @@
-FROM ubuntu:20.04
+FROM archlinux:latest
 
 WORKDIR /jetson
 
-# Update and upgrade Ubuntu
-RUN apt-get update && apt-get upgrade -y
+# Update the system
+RUN pacman -Syu --noconfirm
 
-# Install Python and pip
-RUN apt-get install -y \
+# Install dependencies
+RUN pacman -S --noconfirm \
     python3 \
-    python3-pip
+    python-pip \
+    python-setuptools \
+    python-wheel \
+    cmake \
+    gcc \
+    make \
+    git \
+    pkg-config \
+    gtk3 \
+    libcanberra \
+    mesa \
+    libglvnd \
+    opencv \
+    opencv-samples
 
 # Install Python dependencies
 COPY requirements.txt .
 
-RUN pip3 install -r requirements.txt
+# Remove EXTERNALLY-MANAGED
+RUN rm -rf /usr/lib/python3.11/EXTERNALLY-MANAGED && \
+    pip3 install -r requirements.txt
+
+# Give root access to video devices
+RUN usermod -a -G video root
 
 # Copy source code
 COPY ./src .
 
 # Run the application
-CMD ["python3", "main.py"]
+CMD [ "python", "main.py" ]
