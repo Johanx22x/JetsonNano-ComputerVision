@@ -4,3 +4,4 @@ retina_face
 mtcnn
 yoloface
 dlib
+face_recognition
