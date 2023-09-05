@@ -9,5 +9,5 @@ docker build . -t jetson-nano:latest
 ## Run
 
 ```sh
-docker run --rm jetson-nano:latest
+docker run -it --rm --device /dev/video0 jetson-nano:latest bash
 ```
